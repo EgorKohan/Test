@@ -1,17 +1,17 @@
 package com.netcracker.cats.controller;
 
+import com.netcracker.cats.model.Cat;
 import com.netcracker.cats.service.CatService;
 import com.netcracker.cats.service.CatServiceImpl;
-import com.netcracker.cats.util.ConsolePrinter;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleController {
 
     private final CatService catService = new CatServiceImpl();
-    private final ConsolePrinter consolePrinter = new ConsolePrinter();
 
-    public void printMenuItem(){
+    public void printMenuItem() {
         System.out.print("Select an action:" +
                 "\n1 - Print info about all cats." +
                 "\n2 - Add new cat." +
@@ -34,7 +34,7 @@ public class ConsoleController {
             choice = scanner.nextInt();
             switch (choice) {
                 case 1: {
-                    consolePrinter.printAllCats(
+                    printAllCats(
                             catService.getAll()
                     );
                     break;
@@ -56,6 +56,18 @@ public class ConsoleController {
                 }
             }
         } while (choice != 4);
+    }
+
+    private void printAllCats(List<Cat> cats) {
+        for (Cat cat : cats) {
+            printCatInfo(cat);
+        }
+    }
+
+    private void printCatInfo(Cat cat) {
+        String catInfo = ">>Cat #" + cat.getId() + ". " +
+                "Name " + cat.getName() + ".";
+        System.out.println(catInfo);
     }
 
 }

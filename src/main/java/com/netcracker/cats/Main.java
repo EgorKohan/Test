@@ -1,9 +1,12 @@
 package com.netcracker.cats;
 
+import com.netcracker.cats.controller.ConsoleController;
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello, Cat!)");
+        ConsoleController consoleController = new ConsoleController();
+        consoleController.start();
     }
 
 }
