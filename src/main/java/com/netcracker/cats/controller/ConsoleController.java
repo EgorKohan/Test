@@ -65,8 +65,19 @@ public class ConsoleController {
     }
 
     private void printCatInfo(Cat cat) {
-        String catInfo = ">>Cat #" + cat.getId() + ". " +
-                "Name " + cat.getName() + ".";
+        final Cat father = catService.getById(cat.getFatherId());
+        String fatherInfo = (father == null) ? "unknown" :
+                father.getName() + "(id: " + father.getId() + ")";
+
+        final Cat mother = catService.getById(cat.getMotherId());
+        String motherInfo = (mother == null) ? "unknown" :
+               mother.getName() + "(id: " + mother.getId() + ")";
+
+        String catInfo = ">> Cat #" + cat.getId() + ". " +
+                "Name: " + cat.getName() + ". " +
+                "Father: " + fatherInfo + ". " +
+                "Mother: " + motherInfo + ". ";
+
         System.out.println(catInfo);
     }
 
