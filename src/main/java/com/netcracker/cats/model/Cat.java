@@ -1,17 +1,16 @@
 package com.netcracker.cats.model;
 
+import lombok.*;
+
+@Data
+@AllArgsConstructor
 public class Cat {
 
+    @NonNull
     private Long id;
-    //TODO: add other fields and methods
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @NonNull
+    private String name;
+    private Long fatherId;
+    private Long motherId;
 
 }

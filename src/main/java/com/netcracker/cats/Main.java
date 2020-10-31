@@ -2,6 +2,8 @@ package com.netcracker.cats;
 
 public class Main {
 
-    //TODO: start your program here
+    public static void main(String[] args) {
+        System.out.println("Hello, Cat!)");
+    }
 
 }
