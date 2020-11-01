@@ -4,11 +4,10 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class Cat {
 
-    @NonNull
     private Long id;
-    @NonNull
     private String name;
     private Long fatherId;
     private Long motherId;
