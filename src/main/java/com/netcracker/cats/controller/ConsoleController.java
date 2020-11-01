@@ -64,11 +64,11 @@ public class ConsoleController {
     }
 
     private void printCatInfo(Cat cat) {
-        final Cat father = catService.getById(cat.getFatherId());
+        final Cat father = cat.getFather();
         String fatherInfo = (father == null) ? "unknown" :
                 father.getName() + "(id: " + father.getId() + ")";
 
-        final Cat mother = catService.getById(cat.getMotherId());
+        final Cat mother = cat.getMother();
         String motherInfo = (mother == null) ? "unknown" :
                 mother.getName() + "(id: " + mother.getId() + ")";
 
@@ -76,6 +76,13 @@ public class ConsoleController {
                 "Name: " + cat.getName() + ". " +
                 "Father: " + fatherInfo + ". " +
                 "Mother: " + motherInfo + ". ";
+
+        String childrenInfo = "Children: ";
+        for (Cat child : cat.getChildren()) {
+            childrenInfo = child.getName() + "(id: "+ child.getId() + ").";
+        }
+
+        catInfo += childrenInfo;
 
         System.out.println(catInfo);
     }
@@ -95,7 +102,7 @@ public class ConsoleController {
         }
     }
 
-    private Cat createCat() {
+    private Cat createCat() { //TODO
         System.out.print(">> Input new cat name:\n<< ");
         String catName = inputString("\\p{LC}{2,}");
 
@@ -105,14 +112,10 @@ public class ConsoleController {
         System.out.print(">> Input mother id (if known):\n<< ");
         Long motherId = (long) inputInt();
 
-        if(catService.getById(fatherId) == null && catService.getById(motherId) == null){
-            fatherId = null;
-            motherId = null;
-        }
         return Cat.builder()
                 .name(catName)
-                .fatherId(fatherId)
-                .motherId(motherId)
+//                .fatherId(fatherId)
+//                .motherId(motherId)
                 .build();
     }
 

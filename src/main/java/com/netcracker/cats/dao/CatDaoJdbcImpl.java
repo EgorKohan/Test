@@ -1,6 +1,7 @@
 package com.netcracker.cats.dao;
 
 import com.netcracker.cats.model.Cat;
+import com.netcracker.cats.model.Gender;
 import com.netcracker.cats.util.JdbcConnectionUtil;
 
 import java.sql.Connection;
@@ -21,7 +22,8 @@ public class CatDaoJdbcImpl implements CatDao {
             "SELECT * FROM netcracker.cat WHERE id = ?";
     //language=SQL
     private static final String SQL_CREATE_CAT =
-            "INSERT INTO netcracker.cat(name, father_id, mother_id) VALUE (?, ?, ?)";
+            "INSERT INTO netcracker.cat(name, father_id, mother_id, gender, color, age) " +
+                    "VALUE (?, ?, ?, ?, ?, ?)";
     //language=SQL
     private static final String SQL_UPDATE_CAT_NAME =
             "UPDATE netcracker.cat SET name = ? WHERE id = ?";
@@ -52,11 +54,16 @@ public class CatDaoJdbcImpl implements CatDao {
 
     @Override
     public Cat create(Cat cat) throws SQLException {
-        PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_CREATE_CAT);
-        preparedStatement.setString(1, cat.getName());
-        preparedStatement.setLong(2, cat.getFatherId());
-        preparedStatement.setLong(3, cat.getMotherId());
-        if (preparedStatement.execute()) {
+        PreparedStatement preparedStatementForCat = CONNECTION.prepareStatement(SQL_CREATE_CAT);
+        preparedStatementForCat.setString(1, cat.getName());
+        preparedStatementForCat.setLong(2, cat.getFather().getId());
+        preparedStatementForCat.setLong(3, cat.getMother().getId());
+        preparedStatementForCat.setString(4, cat.getGender().toString());
+        preparedStatementForCat.setString(5, cat.getColor());
+        preparedStatementForCat.setInt(6, cat.getAge());
+
+
+        if (preparedStatementForCat.execute()) {
             return cat;
         }
         return null;
@@ -79,12 +86,26 @@ public class CatDaoJdbcImpl implements CatDao {
     }
 
     private Cat mapCat(ResultSet resultSet) throws SQLException {
-        return new Cat(
+        Cat cat = new Cat(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getLong("father_id"),
-                resultSet.getLong("mother_id")
+                getById(resultSet.getLong("father_id")),
+                getById(resultSet.getLong("mother_id")),
+                resultSet.getInt("age"),
+                resultSet.getString("color"),
+                Gender.valueOf(resultSet.getString("gender"))
         );
+
+        Cat father = cat.getFather();
+        if(father != null) {
+            father.getChildren().add(cat);
+        }
+        Cat mother = cat.getMother();
+        if(mother != null) {
+            mother.getChildren().add(cat);
+        }
+
+        return cat;
     }
 
 }
