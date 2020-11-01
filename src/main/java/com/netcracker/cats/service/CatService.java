@@ -8,6 +8,8 @@ public interface CatService {
 
     Cat getById(Long id);
 
+    List<Cat> getByAge(int age);
+
     List<Cat> getAll();
 
     Cat create(Cat cat);

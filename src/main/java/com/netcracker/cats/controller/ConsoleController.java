@@ -1,12 +1,12 @@
 package com.netcracker.cats.controller;
 
 import com.netcracker.cats.model.Cat;
+import com.netcracker.cats.model.Gender;
 import com.netcracker.cats.service.CatService;
 import com.netcracker.cats.service.CatServiceImpl;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class ConsoleController {
 
@@ -16,9 +16,11 @@ public class ConsoleController {
     public void printMenuItem() {
         System.out.print("Select an action:" +
                 "\n1 - Print info about all cats." +
-                "\n2 - Add new cat." +
-                "\n3 - Search a cat by id." +
-                "\n4 - Exit." +
+                "\n2 - Add a new cat." +
+                "\n3 - Find a cat by id." +
+                "\n4 - Find a cat by age." +
+                "\n5 - Delete a cat." +
+                "\n6 - Exit." +
                 "\nSelect: "
         );
     }
@@ -38,7 +40,6 @@ public class ConsoleController {
                     Cat newCat = createCat();
                     catService.create(newCat);
                     System.out.println(">> Cat created");
-                    printCatInfo(newCat);
                     break;
                 }
                 case 3: {
@@ -46,6 +47,14 @@ public class ConsoleController {
                     break;
                 }
                 case 4: {
+                    printCatByAge();
+                    break;
+                }
+                case 5: {
+                    deleteCatById();
+                    break;
+                }
+                case 6: {
                     break;          /*exit point*/
                 }
                 default: {
@@ -53,7 +62,7 @@ public class ConsoleController {
                     break;
                 }
             }
-        } while (choice != 4);
+        } while (choice != 6);
     }
 
     private void printAllCats() {
@@ -74,12 +83,15 @@ public class ConsoleController {
 
         String catInfo = ">> Cat #" + cat.getId() + ". " +
                 "Name: " + cat.getName() + ". " +
+                "Gender: " + cat.getGender().toString().toLowerCase() + ". " +
+                "Color: " + cat.getColor() + ". " +
+                "Age: " + cat.getAge() + ". " +
                 "Father: " + fatherInfo + ". " +
                 "Mother: " + motherInfo + ". ";
 
-        String childrenInfo = "Children: ";
+        StringBuilder childrenInfo = new StringBuilder("Children: ");
         for (Cat child : cat.getChildren()) {
-            childrenInfo = child.getName() + "(id: "+ child.getId() + ").";
+            childrenInfo.append(child.getName()).append("(id: ").append(child.getId()).append(").");
         }
 
         catInfo += childrenInfo;
@@ -90,7 +102,7 @@ public class ConsoleController {
     private void printCatById() {
         System.out.print(">> Input cat id or 'q' for exit:\n<< ");
         String catId = inputStringWithExit("[q[\\d]+]");
-        if(catId == null){
+        if (catId == null) {
             System.out.println("Exit");
             return;
         }
@@ -102,29 +114,75 @@ public class ConsoleController {
         }
     }
 
-    private Cat createCat() { //TODO
+    private void printCatByAge() {
+        System.out.print(">> Input age:\n<< ");
+        int age = inputInt();
+        final List<Cat> cats = catService.getByAge(age);
+        for (Cat cat : cats) {
+            printCatInfo(cat);
+        }
+    }
+
+    private void deleteCatById() {
+        System.out.println(">> Input cat id for deleting:\n<< ");
+        long id = inputInt();
+        if (catService.deleteById(id)) {
+            System.out.println(">> Cat removed");
+        } else {
+            System.out.println(">> Cat not found");
+        }
+    }
+
+    private Cat createCat() {
         System.out.print(">> Input new cat name:\n<< ");
         String catName = inputString("\\p{LC}{2,}");
 
         System.out.print(">> Input father id (if known):\n<< ");
         Long fatherId = (long) inputInt();
+        Cat father = catService.getById(fatherId);
 
         System.out.print(">> Input mother id (if known):\n<< ");
         Long motherId = (long) inputInt();
+        Cat mother = catService.getById(motherId);
 
-        return Cat.builder()
+        System.out.print(">> Input cat gender(male, female):\n<< ");
+        Gender gender = Gender.valueOf(inputString("male|female}").toUpperCase());
+
+        System.out.print(">> Input cat color: ");
+        String color = inputString("\\p{LC}{2,}");
+
+        System.out.print(">> Input cat age(0, 20): ");
+        int age = inputInt();
+
+        Cat newCat = Cat.builder()
                 .name(catName)
-//                .fatherId(fatherId)
-//                .motherId(motherId)
+                .father(father)
+                .mother(mother)
+                .gender(gender)
+                .color(color)
+                .age(age)
                 .build();
+
+        if (father != null) {
+            father.getChildren().add(newCat);
+        }
+        if (mother != null) {
+            mother.getChildren().add(newCat);
+        }
+
+        return newCat;
     }
 
-    private int inputInt() {
-        while (!SCANNER.hasNextInt()) {
-            System.out.print(">> Incorrect input! Try again:\n<< ");
-            SCANNER.next();
+    private Integer inputInt() {
+        String str = SCANNER.next();
+        while (!str.matches("[\\d+]")) {
+            if (str.equals("\n")) {
+                return null;
+            }
+            System.out.print(">> Incorrect input! Try again.\\n<< ");
+            str = SCANNER.next();
         }
-        return SCANNER.nextInt();
+        return Integer.valueOf(str);
     }
 
     private String inputString(String pattern) {
@@ -136,13 +194,14 @@ public class ConsoleController {
         return str;
     }
 
-    private String inputStringWithExit(String pattern){
+    private String inputStringWithExit(String pattern) {
         String str = SCANNER.next();
-        while(!str.matches(pattern)){
-            System.out.println(">> Incorrect input! Try again.\\n<< ");
-        }
-        if(str.equals("q")){
-            return null;
+        while (!str.matches(pattern)) {
+            if (str.equals("q")) {
+                return null;
+            }
+            System.out.print("<< Incorrect input! Try again.\\n>> ");
+            str = SCANNER.next();
         }
         return str;
     }

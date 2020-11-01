@@ -21,6 +21,19 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
+    public List<Cat> getByAge(int age) {
+        if (age < 0 || age > 21) {
+            System.out.println(">> Incorrect data");
+        return null;
+        }
+        try {
+            return catDao.getByAge(age);
+        } catch (SQLException e) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
     public List<Cat> getAll() {
         try {
             return catDao.getAll();

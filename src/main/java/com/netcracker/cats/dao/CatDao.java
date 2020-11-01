@@ -9,6 +9,8 @@ public interface CatDao {
 
     Cat getById(Long id) throws SQLException;
 
+    List<Cat> getByAge(int age) throws SQLException;
+
     List<Cat> getAll() throws SQLException;
 
     Cat create(Cat cat) throws SQLException;
