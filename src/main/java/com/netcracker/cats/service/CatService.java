@@ -18,4 +18,6 @@ public interface CatService {
 
     boolean deleteById(Long id);
 
+    List<Cat> findCatByName(String name);
+
 }

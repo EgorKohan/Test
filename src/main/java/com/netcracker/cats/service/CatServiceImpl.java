@@ -24,7 +24,7 @@ public class CatServiceImpl implements CatService {
     public List<Cat> getByAge(int age) {
         if (age < 0 || age > 21) {
             System.out.println(">> Incorrect data");
-        return null;
+            return null;
         }
         try {
             return catDao.getByAge(age);
@@ -67,5 +67,11 @@ public class CatServiceImpl implements CatService {
         } catch (SQLException throwables) {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public List<Cat> findCatByName(String name) {
+        //TODO
+        return null;
     }
 }

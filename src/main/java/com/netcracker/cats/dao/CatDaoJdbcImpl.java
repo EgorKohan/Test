@@ -4,10 +4,7 @@ import com.netcracker.cats.model.Cat;
 import com.netcracker.cats.model.Gender;
 import com.netcracker.cats.util.JdbcConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class CatDaoJdbcImpl implements CatDao {
@@ -32,7 +29,7 @@ public class CatDaoJdbcImpl implements CatDao {
     private static final String SQL_CREATE_CHILD_TO_MOTHER_TABLE =
             "INSERT INTO netcracker.mothers(mother_id, child_id) VALUE (?,?)";
     //language=SQL
-    private static final String SQL_UPDATE_CAT_NAME =
+    private static final String SQL_UPDATE_CAT_BY_NAME =
             "UPDATE netcracker.cats SET name = ? WHERE id = ?";
     //language=SQL
     private static final String SQL_DELETE_CAT_BY_ID =
@@ -52,9 +49,23 @@ public class CatDaoJdbcImpl implements CatDao {
     //language=SQL
     private static final String SQL_FIND_CAT_BY_AGE =
             "SELECT * FROM netcracker.cats WHERE age = ?";
+    //language=SQL
+    private static final String SQL_GET_LATEST_CAT =
+            "SELECT * FROM netcracker.cats ORDER BY id DESC LIMIT 1";
+    //language=SQL
+    private static final String SQL_DROP_CHILD_FROM_FATHER =
+            "DELETE FROM netcracker.fathers WHERE father_id = ?";
+    //language=SQL
+    private static final String SQL_DROP_CHILD_FROM_MOTHER =
+            "DELETE FROM netcracker.mothers WHERE mother_id = ?";
+
 
     @Override
     public Cat getById(Long id) throws SQLException {
+        if (id == null) {
+            return null;
+        }
+
         PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_GET_CAT_BY_ID);
         preparedStatement.setLong(1, id);
         final ResultSet resultSet = preparedStatement.executeQuery();
@@ -89,21 +100,38 @@ public class CatDaoJdbcImpl implements CatDao {
 
     @Override
     public Cat create(Cat cat) throws SQLException {
+        Cat father = cat.getFather();
+        Cat mother = cat.getMother();
+
         PreparedStatement preparedStatementForCat = CONNECTION.prepareStatement(SQL_CREATE_CAT);
         preparedStatementForCat.setString(1, cat.getName());
         preparedStatementForCat.setString(2, cat.getGender().toString());
         preparedStatementForCat.setString(3, cat.getColor());
         preparedStatementForCat.setInt(4, cat.getAge());
 
-        if (preparedStatementForCat.execute()) {
-            return cat;
+        preparedStatementForCat.execute();
+        cat = getLatestCat();
+
+        if (cat != null) {
+            cat.setFather(father);
+            cat.setMother(mother);
+
+            if (father != null) {
+                father.getChildren().add(cat);
+            }
+            if (mother != null) {
+                mother.getChildren().add(cat);
+            }
+            addChildToFather(cat);
+            addChildToMother(cat);
         }
-        return null;
+
+        return cat;
     }
 
     @Override
     public Cat update(Cat cat) throws SQLException {
-        PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_UPDATE_CAT_NAME);
+        PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_UPDATE_CAT_BY_NAME);
         preparedStatement.setString(1, cat.getName());
         preparedStatement.setLong(2, cat.getId());
         preparedStatement.executeUpdate();
@@ -114,7 +142,20 @@ public class CatDaoJdbcImpl implements CatDao {
     public boolean deleteById(Long id) throws SQLException {
         PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_DELETE_CAT_BY_ID);
         preparedStatement.setLong(1, id);
-        return preparedStatement.execute();
+
+        PreparedStatement dropFromFather = CONNECTION.prepareStatement(SQL_DROP_CHILD_FROM_FATHER);
+        PreparedStatement dropFromMother = CONNECTION.prepareStatement(SQL_DROP_CHILD_FROM_MOTHER);
+        dropFromFather.setLong(1, id);
+        dropFromMother.setLong(1, id);
+
+        Cat cat = cache.get(id);
+        cat = null;
+        cache.remove(id);
+
+
+        return !(preparedStatement.execute()
+                && dropFromFather.execute()
+                && dropFromFather.execute());
     }
 
     private Cat mapCat(ResultSet resultSet) throws SQLException {
@@ -132,6 +173,7 @@ public class CatDaoJdbcImpl implements CatDao {
                 .build();
 
         cache.put(cat.getId(), cat);
+
         cat.getChildren().addAll(
                 (cat.getGender() == Gender.MALE) ?
                         findFatherChildrenByCatId(cat.getId()) :
@@ -158,7 +200,7 @@ public class CatDaoJdbcImpl implements CatDao {
 
         List<Cat> children = new ArrayList<>();
         final ResultSet resultSet = preparedStatement.executeQuery();
-        long childId = 0;
+        long childId;
 
         while (resultSet.next()) {
             childId = resultSet.getLong("child_id");
@@ -208,6 +250,33 @@ public class CatDaoJdbcImpl implements CatDao {
             final Cat mother = getById(motherId);
             cache.put(mother.getId(), mother);
             return mother;
+        }
+        return null;
+    }
+
+    private void addChildToFather(Cat cat) throws SQLException {
+        if (cat.getFather() != null) {
+            PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_CREATE_CHILD_TO_FATHER_TABLE);
+            preparedStatement.setLong(1, cat.getFather().getId());
+            preparedStatement.setLong(2, cat.getId());
+            preparedStatement.execute();
+        }
+    }
+
+    private void addChildToMother(Cat cat) throws SQLException {
+        if (cat.getMother() != null) {
+            PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_CREATE_CHILD_TO_MOTHER_TABLE);
+            preparedStatement.setLong(1, cat.getMother().getId());
+            preparedStatement.setLong(2, cat.getId());
+            preparedStatement.execute();
+        }
+    }
+
+    private Cat getLatestCat() throws SQLException {
+        final Statement statement = CONNECTION.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_GET_LATEST_CAT);
+        if (resultSet.next()) {
+            return mapCat(resultSet);
         }
         return null;
     }

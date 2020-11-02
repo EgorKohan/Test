@@ -1,5 +1,7 @@
 package com.netcracker.cats.controller;
 
+import com.netcracker.cats.dao.CatDao;
+import com.netcracker.cats.dao.CatDaoJdbcImpl;
 import com.netcracker.cats.model.Cat;
 import com.netcracker.cats.model.Gender;
 import com.netcracker.cats.service.CatService;
@@ -124,12 +126,12 @@ public class ConsoleController {
     }
 
     private void deleteCatById() {
-        System.out.println(">> Input cat id for deleting:\n<< ");
-        long id = inputInt();
+        System.out.print(">> Input cat id for deleting:\n<< ");
+        Long id = (long) inputInt();
         if (catService.deleteById(id)) {
-            System.out.println(">> Cat removed");
-        } else {
             System.out.println(">> Cat not found");
+        } else {
+            System.out.println(">> Cat removed");
         }
     }
 
@@ -138,15 +140,17 @@ public class ConsoleController {
         String catName = inputString("\\p{LC}{2,}");
 
         System.out.print(">> Input father id (if known):\n<< ");
-        Long fatherId = (long) inputInt();
+        Long fatherId = (long) inputInt();/*inputLongWithNull();*/
         Cat father = catService.getById(fatherId);
 
+        //TODO add exit with enter
+
         System.out.print(">> Input mother id (if known):\n<< ");
-        Long motherId = (long) inputInt();
+        Long motherId = (long) inputInt();/*inputLongWithNull();*/
         Cat mother = catService.getById(motherId);
 
         System.out.print(">> Input cat gender(male, female):\n<< ");
-        Gender gender = Gender.valueOf(inputString("male|female}").toUpperCase());
+        Gender gender = Gender.valueOf(inputString("male|female").toUpperCase());
 
         System.out.print(">> Input cat color: ");
         String color = inputString("\\p{LC}{2,}");
@@ -154,7 +158,7 @@ public class ConsoleController {
         System.out.print(">> Input cat age(0, 20): ");
         int age = inputInt();
 
-        Cat newCat = Cat.builder()
+        return Cat.builder()
                 .name(catName)
                 .father(father)
                 .mother(mother)
@@ -162,28 +166,32 @@ public class ConsoleController {
                 .color(color)
                 .age(age)
                 .build();
-
-        if (father != null) {
-            father.getChildren().add(newCat);
-        }
-        if (mother != null) {
-            mother.getChildren().add(newCat);
-        }
-
-        return newCat;
     }
 
     private Integer inputInt() {
-        String str = SCANNER.next();
-        while (!str.matches("[\\d+]")) {
-            if (str.equals("\n")) {
-                return null;
-            }
-            System.out.print(">> Incorrect input! Try again.\\n<< ");
-            str = SCANNER.next();
+        int i;
+        while (!SCANNER.hasNextInt()) {
+            System.out.print(">> Incorrect input! Try again.\n<< ");
+            SCANNER.next();
         }
-        return Integer.valueOf(str);
+        i = SCANNER.nextInt();
+        return i;
     }
+
+
+//    private Long inputLongWithNull() {
+//        SCANNER.nextLine();
+//        String str = SCANNER.nextLine();
+//        while (!str.matches("[\\d+]")) {
+//            str = SCANNER.nextLine();
+//            if (str.equals("")) {
+//                return null;
+//            }
+//            System.out.print(">> Incorrect input! Try again.\n<< ");
+//            str = SCANNER.nextLine();
+//        }
+//        return Long.valueOf(str);
+//    }
 
     private String inputString(String pattern) {
         String str = SCANNER.next();
@@ -197,11 +205,12 @@ public class ConsoleController {
     private String inputStringWithExit(String pattern) {
         String str = SCANNER.next();
         while (!str.matches(pattern)) {
-            if (str.equals("q")) {
-                return null;
-            }
+
             System.out.print("<< Incorrect input! Try again.\\n>> ");
             str = SCANNER.next();
+        }
+        if (str.equals("q")) {
+            return null;
         }
         return str;
     }

@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString(exclude = {"father", "mother", "children"})
-@EqualsAndHashCode(of = {"id", "name"})
+@EqualsAndHashCode(of = "id")
 public class Cat {
 
     private Long id;
