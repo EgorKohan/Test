@@ -10,12 +10,12 @@ import java.util.Properties;
 
 public class JdbcConnectionUtil {
 
-    private final Connection CONNECTION;
+    private static final Connection CONNECTION;
 
-    {
+    static {
         final Properties properties = new Properties();
         try {
-            properties.load(getClass().getResourceAsStream("/persistence.properties"));
+            properties.load(JdbcConnectionUtil.class.getResourceAsStream("/persistence.properties"));
             CONNECTION = DriverManager.getConnection(
                     properties.getProperty("db.url"),
                     properties.getProperty("db.username"),
@@ -28,7 +28,7 @@ public class JdbcConnectionUtil {
         }
     }
 
-    public  Connection getConnection(){
+    public Connection getConnection(){
         return CONNECTION;
     }
 

@@ -8,6 +8,8 @@ public interface CatService {
 
     Cat getById(Long id);
 
+    List<Cat> getByAge(int age);
+
     List<Cat> getAll();
 
     Cat create(Cat cat);
@@ -15,5 +17,9 @@ public interface CatService {
     Cat update(Cat cat);
 
     boolean deleteById(Long id);
+
+    List<Cat> findCatsByName(String name);
+
+    String buildFamilyTree(Long id);
 
 }
