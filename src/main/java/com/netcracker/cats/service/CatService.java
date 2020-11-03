@@ -18,6 +18,8 @@ public interface CatService {
 
     boolean deleteById(Long id);
 
-    List<Cat> findCatByName(String name);
+    List<Cat> findCatsByName(String name);
+
+    String buildFamilyTree(Long id);
 
 }

@@ -3,7 +3,9 @@ package com.netcracker.cats.model;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +22,6 @@ public class Cat {
     private String color;
     private Gender gender;
 
-    private final List<Cat> children = new ArrayList<>();
+    private final Set<Cat> children = new HashSet<>();
 
 }
