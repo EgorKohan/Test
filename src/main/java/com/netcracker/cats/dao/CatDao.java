@@ -19,4 +19,6 @@ public interface CatDao {
 
     boolean deleteById(Long id) throws SQLException;
 
+    List<Cat> findCatsByName(String name) throws SQLException;
+
 }

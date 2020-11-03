@@ -50,6 +50,11 @@ public class CatDaoJdbcImpl implements CatDao {
             "SELECT * FROM netcracker.cats " +
                     "LEFT JOIN netcracker.parents ON cats.id = parents.child_id " +
                     "WHERE mother_id = ? OR  father_id = ?";
+    //language=SQL
+    private static final String SQL_FILTER_CATS_BY_PATTERN =
+            "SELECT * FROM netcracker.cats " +
+                    "LEFT JOIN netcracker.parents ON cats.id = parents.child_id " +
+                    "WHERE cats.name LIKE ?";
 
     @Override
     public Cat getById(Long id) throws SQLException {
@@ -241,4 +246,18 @@ public class CatDaoJdbcImpl implements CatDao {
         return null;
     }
 
+    @Override
+    public List<Cat> findCatsByName(String name) throws SQLException {
+        PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_FILTER_CATS_BY_PATTERN);
+        String pattern = "%" + name + "%";
+        preparedStatement.setString(1, pattern);
+        final ResultSet resultSet = preparedStatement.executeQuery();
+        List<Cat> filteredCats = new ArrayList<>();
+        while (resultSet.next()) {
+            filteredCats.add(
+                    mapCatWithParents(resultSet)
+            );
+        }
+        return filteredCats;
+    }
 }
