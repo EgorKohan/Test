@@ -261,4 +261,7 @@ public class CatDaoJdbcImpl implements CatDao {
         }
         return filteredCats;
     }
+
+    //create a method to map cat id with searching if there is not use in another cat
+
 }
