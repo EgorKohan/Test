@@ -61,7 +61,7 @@ public class CatDaoJdbcImpl implements CatDao {
         preparedStatement.setLong(1, id);
         final ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            return mapCat(resultSet);
+            return createCat(resultSet);
         }
         return null;
     }
@@ -74,7 +74,7 @@ public class CatDaoJdbcImpl implements CatDao {
         final ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             cats.add(
-                    mapCat(resultSet)
+                    createCat(resultSet)
             );
         }
         return cats;
@@ -183,8 +183,8 @@ public class CatDaoJdbcImpl implements CatDao {
             Long fatherId = resultSet.getLong("father_id");
             Long motherId = resultSet.getLong("mother_id");
 
-            Cat father = getById(fatherId);
-            Cat mother = getById(motherId);
+            Cat father = mapCatById(fatherId);
+            Cat mother = mapCatById(motherId);
 
             cat.setFather(father);
             cat.setMother(mother);
@@ -203,7 +203,7 @@ public class CatDaoJdbcImpl implements CatDao {
         while (resultSet.next()) {
             childId = resultSet.getLong("child_id");
             children.add(
-                    getById(childId)
+                    mapCatById(childId)
             );
         }
 
@@ -215,6 +215,16 @@ public class CatDaoJdbcImpl implements CatDao {
         bindParentsToCat(cat);
         bindChildrenToCat(cat);
         return cat;
+    }
+
+    private Cat mapCatById(Long id) throws SQLException {
+        PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_FIND_CAT_BY_ID);
+        preparedStatement.setLong(1, id);
+        final ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return mapCat(resultSet);
+        }
+        return null;
     }
 
 }

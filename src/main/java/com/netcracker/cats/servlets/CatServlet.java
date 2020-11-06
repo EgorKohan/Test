@@ -19,9 +19,16 @@ public class CatServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Cat> cats = catService.getAll();
-        req.setAttribute("cats", cats);
-        req.getRequestDispatcher("jsp/cats.jsp").forward(req, resp);
+        String id = req.getParameter("id");
+        if (id == null || id.isEmpty()) {
+            List<Cat> cats = catService.getAll();
+            req.setAttribute("cats", cats);
+            req.getRequestDispatcher("jsp/cats.jsp").forward(req, resp);
+        }
+        Long catId = Long.valueOf(id);
+        Cat cat = catService.getById(catId);
+        req.setAttribute("cat", cat);
+        req.getRequestDispatcher("jsp/cat.jsp").forward(req, resp);
     }
 
 }

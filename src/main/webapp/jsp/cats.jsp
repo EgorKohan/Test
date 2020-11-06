@@ -3,17 +3,18 @@
 <html>
 <head>
     <title>Cats</title>
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
 
-<table>
-    <tr>
+<table class="catTable">
+    <thead>
         <td>Id</td>
         <td>Name</td>
         <td>Color</td>
         <td>Age</td>
-        <td>Gender</td>
-    </tr>
+        <td> Gender</td>
+    </thead>
     <%--@elvariable id="cats" type="java.util.List"--%>
     <c:forEach items="${cats}" var="cat">
         <tr>
