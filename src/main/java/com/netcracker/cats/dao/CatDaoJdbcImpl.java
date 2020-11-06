@@ -9,6 +9,7 @@ import java.util.*;
 
 public class CatDaoJdbcImpl implements CatDao {
 
+    //FIXME remove cache
     private final Map<Long, Cat> cache = new HashMap<>();
     private final Connection CONNECTION = new JdbcConnectionUtil().getConnection();
 
