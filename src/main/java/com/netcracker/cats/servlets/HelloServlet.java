@@ -17,6 +17,6 @@ public class HelloServlet extends HttpServlet {
             name = "World";
         }
         req.setAttribute("name", name);
-        req.getRequestDispatcher("hello.jsp").forward(req, resp);
+        req.getRequestDispatcher("jsp/hello.jsp").forward(req, resp);
     }
 }

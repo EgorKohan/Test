@@ -1,7 +1,5 @@
 package com.netcracker.cats.util;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +13,7 @@ public class JdbcConnectionUtil {
     static {
         final Properties properties = new Properties();
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             properties.load(JdbcConnectionUtil.class.getResourceAsStream("/persistence.properties"));
             CONNECTION = DriverManager.getConnection(
                     properties.getProperty("db.url"),
@@ -25,10 +24,12 @@ public class JdbcConnectionUtil {
             throw new IllegalArgumentException("Can't found the file ");
         } catch (SQLException e) {
             throw new IllegalArgumentException("Wrong SQL connection data");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
         }
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return CONNECTION;
     }
 
