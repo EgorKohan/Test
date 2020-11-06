@@ -5,10 +5,7 @@ import com.netcracker.cats.dao.CatDaoJdbcImpl;
 import com.netcracker.cats.model.Cat;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CatServiceImpl implements CatService {
 

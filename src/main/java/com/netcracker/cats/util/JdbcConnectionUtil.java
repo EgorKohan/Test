@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class JdbcConnectionUtil {
+public class JdbcConnectionUtil implements AutoCloseable{
 
     private static final Connection CONNECTION;
 
@@ -31,6 +31,11 @@ public class JdbcConnectionUtil {
 
     public Connection getConnection() {
         return CONNECTION;
+    }
+
+    @Override
+    public void close() throws Exception {
+        CONNECTION.close();
     }
 
 }
