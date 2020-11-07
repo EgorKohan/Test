@@ -1,15 +1,10 @@
+<%--@elvariable id="cat" type="com.netcracker.cats.model.Cat"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 07.11.2020
-  Time: 0:51
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Cat info</title>
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
 
@@ -21,36 +16,65 @@
 <p>Gender: ${cat.gender}</p>
 
 <p>
-    Father: ${cat.father.id}
-    ${cat.father.name}
+    Father:
+    <c:if test="${cat.father != null}">
+        ${cat.father.id}
+        <a href="<c:url value="/cats?id=${cat.father.id}"/>">
+                ${cat.father.name}
+        </a>
+    </c:if>
+    <c:if test="${cat.father == null}">
+        Unknown
+    </c:if>
 </p>
 
 <p>
     Mother: ${cat.mother.id}
-    ${cat.mother.name}
+    <a href="<c:url value="/cats?id=${cat.mother.id}"/>">
+        ${cat.mother.name}
+    </a>
 </p>
 
-<table>
+<table class="catTable">
+
     <thead>
-    <td>
-        Id
-    </td>
-    <td>
-        Name
-    </td>
+    <tr>
+        <td colspan="2">
+            Children
+        </td>
+    </tr>
     </thead>
+    <tr>
+        <td>Id</td>
+        <td>Name</td>
+    </tr>
     <c:forEach items="${cat.children}" var="child">
         <tr>
             <td>
                     ${child.id}
             </td>
             <td>
-                    ${child.name}
+                <a href="<c:url value="/cats?id=${child.id}"/>">
+                        ${child.name}
+                </a>
             </td>
         </tr>
     </c:forEach>
 </table>
 
+<form action="<c:url value="/jsp/updateCat.jsp"/>" method="post">
+    <input type="hidden" name="id" value="${cat.id}">
+    <input type="hidden" name="name" value="${cat.name}">
+    <input type="hidden" name="color" value="${cat.color}">
+    <input type="hidden" name="gender" value="${cat.gender}">
+    <input type="submit" value="Edit">
+</form>
+
+<form action="/cats" method="post">
+    <input type="hidden" name="_method" value="delete">
+    <input type="hidden" name="id" value="${cat.id}">
+    <input type="submit" value="Delete">
+</form>
 
 </body>
 </html>
