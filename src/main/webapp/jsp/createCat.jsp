@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Create/Edit</title>
+    <title>Create cat</title>
     <link rel="stylesheet" href="<c:url value="/css/formStyle.css"/>" type="text/css">
 </head>
 <body>

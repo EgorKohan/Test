@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Cats</title>
-    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 <body>
 
@@ -19,13 +19,15 @@
     <c:forEach items="${cats}" var="cat">
         <tr>
             <td>${cat.id}</td>
-            <td>${cat.name}</td>
+            <td><a href="<c:url value="/cats?id=${cat.id}"/>">${cat.name}</a></td>
             <td>${cat.color}</td>
             <td>${cat.age}</td>
             <td>${cat.gender}</td>
         </tr>
     </c:forEach>
 </table>
+
+<a href="<c:url value="/create"/>">Create a new cat</a>
 
 </body>
 </html>
