@@ -1,0 +1,27 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    box-sizing: border-box;
+}
+
+#editCatForm > label {
+    background-color: aqua;
+    border-radius: 15px;
+}
+
+#editCatForm > label > input {
+    border-radius: 15px;
+    color: red;
+}
+
+#editCatForm > .button{
+    display: inline-block;
+    padding: 10px;
+    background-color: cornsilk;
+    border: 1px solid black;
+    text-decoration: none;
+    font-size: 15px;
+    color: black;
+    cursor: pointer;
+}

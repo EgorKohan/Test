@@ -140,6 +140,8 @@ public class CatDaoJdbcImpl implements CatDao {
         preparedStatement.setInt(4, cat.getAge());
         preparedStatement.setLong(5, cat.getId());
 
+        preparedStatement.executeUpdate();
+
         return getById(cat.getId());
     }
 

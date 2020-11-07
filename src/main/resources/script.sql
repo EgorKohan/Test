@@ -11,5 +11,5 @@ create table if not exists parents(
     child_id int primary key,
     father_id int,
     mother_id int,
-    foreign key (child_id) references netcracker.cats(id)
+    foreign key (child_id) references netcracker.cats(id) ON UPDATE CASCADE on DELETE CASCADE
 );

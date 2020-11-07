@@ -6,4 +6,29 @@
 
     <display-name>Servlet 3.0 Web Application</display-name>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.html</location>
+    </error-page>
+
+    <servlet>
+        <servlet-name>CatServlet</servlet-name>
+        <servlet-class>com.netcracker.cats.servlets.CatServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>CatServlet</servlet-name>
+        <url-pattern>/cats</url-pattern>
+    </servlet-mapping>
+    
+    <filter>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <servlet-name>CatServlet</servlet-name>
+    </filter-mapping>
+    
 </web-app>
