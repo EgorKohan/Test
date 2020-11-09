@@ -6,6 +6,10 @@
 
     <display-name>Servlet 3.0 Web Application</display-name>
 
+    <welcome-file-list>
+        <welcome-file>/jsp/login.jsp</welcome-file>
+    </welcome-file-list>
+    
     <error-page>
         <error-code>404</error-code>
         <location>/error/404.html</location>
@@ -29,6 +33,17 @@
     <filter-mapping>
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <servlet-name>CatServlet</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>getMethodConvertingFilter</filter-name>
+        <filter-class>com.netcracker.cats.filter.GetMethodConvertingFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>getMethodConvertingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
     
 </web-app>

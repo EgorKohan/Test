@@ -4,77 +4,93 @@
 <html>
 <head>
     <title>Cat info</title>
-    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
 
+<c:import url="/logo/logo.html"/>
 
-<p>Id: ${cat.id}</p>
-<p>Name: ${cat.name}</p>
-<p>Color: ${cat.color}</p>
-<p>Age: ${cat.age}</p>
-<p>Gender: ${cat.gender}</p>
+<div class="wrapper">
 
-<p>
-    Father:
-    <c:if test="${cat.father != null}">
-        ${cat.father.id}
-        <a href="<c:url value="/cats?id=${cat.father.id}"/>">
-                ${cat.father.name}
-        </a>
-    </c:if>
-    <c:if test="${cat.father == null}">
-        Unknown
-    </c:if>
-</p>
+    <div id="catInfo">
 
-<p>
-    Mother: ${cat.mother.id}
-    <a href="<c:url value="/cats?id=${cat.mother.id}"/>">
-        ${cat.mother.name}
-    </a>
-</p>
+        <p class="info">Id: <span>${cat.id}</span></p>
+        <p class="info">Name: <span>${cat.name}</span></p>
+        <p class="info">Color: <span>${cat.color}</span></p>
+        <p class="info">Age: <span>${cat.age}</span></p>
+        <p class="info">Gender: <span>${cat.gender}</span></p>
 
-<table class="catTable">
+        <p class="info">
+            Father:
+            <c:if test="${cat.father != null}">
+                <span>
+                    <a href="<c:url value="/cats?id=${cat.father.id}"/>">
+                            ${cat.father.name}</a>
+                    </span>
+            </c:if>
+            <c:if test="${cat.father == null}">
+                <span>Unknown</span>
+            </c:if>
+        </p>
 
-    <thead>
-    <tr>
-        <td colspan="2">
-            Children
-        </td>
-    </tr>
-    </thead>
-    <tr>
-        <td>Id</td>
-        <td>Name</td>
-    </tr>
-    <c:forEach items="${cat.children}" var="child">
-        <tr>
-            <td>
-                    ${child.id}
-            </td>
-            <td>
-                <a href="<c:url value="/cats?id=${child.id}"/>">
-                        ${child.name}
-                </a>
-            </td>
-        </tr>
-    </c:forEach>
-</table>
+        <p class="info">
+            Mother:
+            <c:if test="${cat.mother != null}">
+                <span>
+                    <a href="<c:url value="/cats?id=${cat.mother.id}"/>">
+                            ${cat.mother.name}
+                    </a>
+                   </span>
+            </c:if>
+            <c:if test="${cat.mother == null}">
+                <span>Unknown</span>
+            </c:if>
+        </p>
 
-<form action="<c:url value="/jsp/updateCat.jsp"/>" method="post">
-    <input type="hidden" name="id" value="${cat.id}">
-    <input type="hidden" name="name" value="${cat.name}">
-    <input type="hidden" name="color" value="${cat.color}">
-    <input type="hidden" name="gender" value="${cat.gender}">
-    <input type="submit" value="Edit">
-</form>
+        <table class="catTable">
 
-<form action="/cats" method="post">
-    <input type="hidden" name="_method" value="delete">
-    <input type="hidden" name="id" value="${cat.id}">
-    <input type="submit" value="Delete">
-</form>
+            <thead>
+            <tr>
+                <td colspan="2">
+                    Children
+                </td>
+            </tr>
+            </thead>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+            </tr>
+            <c:forEach items="${cat.children}" var="child">
+                <tr>
+                    <td>
+                            ${child.id}
+                    </td>
+                    <td>
+                        <a href="<c:url value="/cats?id=${child.id}"/>">
+                                ${child.name}
+                        </a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+
+        <div class="buttonBar">
+            <form action="<c:url value="/update"/>" method="get">
+                <input type="hidden" name="id" value="${cat.id}">
+                <input class="button" type="submit" value="Edit">
+            </form>
+
+            <form action="<c:url value="/cats"/>" method="post">
+                <input type="hidden" name="_method" value="delete">
+                <input type="hidden" name="id" value="${cat.id}">
+                <input class="button" type="submit" value="Delete">
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
 
 </body>
 </html>

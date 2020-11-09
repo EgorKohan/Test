@@ -1,27 +1,40 @@
-*{
+* {
     padding: 0;
     margin: 0;
     font-size: 100%;
     box-sizing: border-box;
+    font-family: "Roboto Light", serif;
 }
 
-#editCatForm > label {
-    background-color: aqua;
-    border-radius: 15px;
+#editCatForm {
+    flex: 0 0 2em;
 }
 
-#editCatForm > label > input {
-    border-radius: 15px;
-    color: red;
-}
-
-#editCatForm > .button{
-    display: inline-block;
+#editCatForm label {
+    display: block;
     padding: 10px;
-    background-color: cornsilk;
-    border: 1px solid black;
-    text-decoration: none;
-    font-size: 15px;
-    color: black;
-    cursor: pointer;
+}
+
+#editCatForm input {
+
+}
+
+#editCatForm legend {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+#editCatForm fieldset {
+    border: 3px solid cornflowerblue;
+    box-shadow: 5px 5px cornsilk;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.createButton:hover {
+    background-color: #1ce25f;
+}
+
+.cancelButton:hover{
+    background-color: #FF0000;
 }
