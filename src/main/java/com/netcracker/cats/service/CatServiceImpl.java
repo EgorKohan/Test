@@ -11,6 +11,8 @@ public class CatServiceImpl implements CatService {
 
     private final CatDao catDao = new CatDaoJdbcImpl();
 
+    //добавить логгер
+
     @Override
     public Cat getById(Long id) {
         try {

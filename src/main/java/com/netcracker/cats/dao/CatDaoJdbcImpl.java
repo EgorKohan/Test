@@ -1,12 +1,10 @@
 package com.netcracker.cats.dao;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import com.netcracker.cats.model.Cat;
 import com.netcracker.cats.model.Gender;
 import com.netcracker.cats.util.JdbcConnectionUtil;
 import lombok.NonNull;
 
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +16,7 @@ import java.util.List;
 
 public class CatDaoJdbcImpl implements CatDao {
 
-    private final Connection CONNECTION = new JdbcConnectionUtil().getConnection();
+    private final Connection CONNECTION = JdbcConnectionUtil.getConnection();
 
     //language=SQL
     private static final String SQL_SELECT_ALL_CATS =
@@ -61,6 +59,7 @@ public class CatDaoJdbcImpl implements CatDao {
 
     @Override
     public Cat getById(Long id) throws SQLException {
+        //FIXME закрывать statement
         PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_FIND_CAT_BY_ID);
         preparedStatement.setLong(1, id);
         final ResultSet resultSet = preparedStatement.executeQuery();
@@ -128,7 +127,7 @@ public class CatDaoJdbcImpl implements CatDao {
                 preparedStatement1.setNull(3, Types.INTEGER);
             }
             preparedStatement1.executeUpdate();
-
+            //присваивать id
             newCat = getById(id);
         }
 

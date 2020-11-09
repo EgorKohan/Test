@@ -51,9 +51,10 @@ public class CatServlet extends HttpServlet {
             req.setAttribute("errorDescription", result);
             req.setAttribute("cat", cat);
 
-            catRequestUtil.addCatsAsListByGender(req);
+//            catRequestUtil.addCatsAsListByGender(req);
 
-            req.getRequestDispatcher("jsp/createCat.jsp").forward(req, resp);
+            //ссылаться на url
+            req.getRequestDispatcher("/create").forward(req, resp);
         }
     }
 

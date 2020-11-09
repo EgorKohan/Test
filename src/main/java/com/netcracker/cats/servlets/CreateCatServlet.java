@@ -1,7 +1,5 @@
 package com.netcracker.cats.servlets;
 
-import com.netcracker.cats.service.CatService;
-import com.netcracker.cats.service.CatServiceImpl;
 import com.netcracker.cats.util.CatRequestUtil;
 
 import javax.servlet.ServletException;
@@ -14,7 +12,6 @@ import java.io.IOException;
 @WebServlet("/create")
 public class CreateCatServlet extends HttpServlet {
 
-    private final CatService catService = new CatServiceImpl();
     private final CatRequestUtil catRequestUtil = new CatRequestUtil();
 
     @Override

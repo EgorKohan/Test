@@ -27,8 +27,4 @@ public class UpdateCatServlet extends HttpServlet {
         req.getRequestDispatcher("jsp/updateCat.jsp").forward(req, resp);
     }
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp); //ну и костыль пздц
-    }
 }

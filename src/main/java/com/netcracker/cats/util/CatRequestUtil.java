@@ -49,14 +49,15 @@ public class CatRequestUtil {
                 .build();
     }
 
-    public void addCatsAsListByGender(HttpServletRequest req){
-        List<Cat> males = catService.getAll().stream()
+    public void addCatsAsListByGender(HttpServletRequest req) {
+        final List<Cat> cats = catService.getAll();
+        List<Cat> males = cats.stream()
                 .filter(cat -> cat.getGender().equals(Gender.MALE))
                 .collect(Collectors.toList());
-        List<Cat> females = catService.getAll().stream()
+        List<Cat> females = cats.stream()
                 .filter(cat -> cat.getGender().equals(Gender.FEMALE))
                 .collect(Collectors.toList());
-
+// сделать одним стримом
         req.setAttribute("males", males);
         req.setAttribute("females", females);
     }
