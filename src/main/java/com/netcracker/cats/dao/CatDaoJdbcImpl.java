@@ -16,7 +16,7 @@ import static com.netcracker.cats.dao.sql.SqlQueries.*;
 
 public class CatDaoJdbcImpl implements CatDao {
 
-    private final Connection CONNECTION = JdbcConnectionUtil.getConnection();
+    private final Connection CONNECTION = JdbcConnectionUtil.getInstance().getConnection();
 
     @Override
     public Cat getById(Long id) throws SQLException {

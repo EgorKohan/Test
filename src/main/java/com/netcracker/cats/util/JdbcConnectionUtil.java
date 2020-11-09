@@ -8,9 +8,10 @@ import java.util.Properties;
 
 public class JdbcConnectionUtil implements AutoCloseable{
 
-    private static final Connection CONNECTION;
+    private static final JdbcConnectionUtil jdbcConnectionUtil = new JdbcConnectionUtil();
+    private static Connection CONNECTION;
 
-    static {
+    private JdbcConnectionUtil(){
         final Properties properties = new Properties();
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -29,7 +30,11 @@ public class JdbcConnectionUtil implements AutoCloseable{
         }
     }
 
-    public static Connection getConnection() {
+    public static JdbcConnectionUtil getInstance(){
+        return jdbcConnectionUtil;
+    }
+
+    public Connection getConnection() {
         return CONNECTION;
     }
 
