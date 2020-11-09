@@ -6,6 +6,7 @@ import com.netcracker.cats.model.Gender;
 import com.netcracker.cats.util.JdbcConnectionUtil;
 import lombok.NonNull;
 
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,6 +41,9 @@ public class CatDaoJdbcImpl implements CatDao {
     //language=SQL
     private static final String SQL_UPDATE_CAT_BY_ID =
             "UPDATE netcracker.cats SET name = ?, gender = ?, color = ?, age = ? WHERE id = ?";
+    //language=SQL
+    private static final String SQL_UPDATE_PARENT_BY_ID =
+            "UPDATE  netcracker.parents SET father_id = ?, mother_id = ? WHERE child_id = ?";
     //language=SQL
     private static final String SQL_FIND_PARENTS_ID =
             "SELECT * FROM netcracker.parents WHERE child_id = ?";
@@ -142,6 +146,30 @@ public class CatDaoJdbcImpl implements CatDao {
 
         preparedStatement.executeUpdate();
 
+        PreparedStatement updateParent = CONNECTION.prepareStatement(SQL_UPDATE_PARENT_BY_ID);
+        PreparedStatement createParents = CONNECTION.prepareStatement(SQL_INSERT_CAT_INTO_PARENTS);
+
+        if (cat.getFather() != null) {
+            updateParent.setLong(1, cat.getFather().getId());
+            createParents.setLong(2, cat.getFather().getId());
+        } else {
+            updateParent.setNull(1, Types.INTEGER);
+            createParents.setNull(2, Types.INTEGER);
+        }
+        if (cat.getMother() != null) {
+            updateParent.setLong(2, cat.getMother().getId());
+            createParents.setLong(3, cat.getMother().getId());
+        } else {
+            updateParent.setNull(2, Types.INTEGER);
+            createParents.setNull(3, Types.INTEGER);
+        }
+        updateParent.setLong(3, cat.getId());
+        createParents.setLong(1, cat.getId());
+
+        if (updateParent.executeUpdate() == 0) {
+            createParents.executeUpdate();
+        }
+
         return getById(cat.getId());
     }
 
@@ -149,7 +177,7 @@ public class CatDaoJdbcImpl implements CatDao {
     public boolean deleteById(Long id) throws SQLException {
         PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_DELETE_CAT_BY_ID);
         preparedStatement.setLong(1, id);
-        return preparedStatement.execute(); //TODO
+        return !preparedStatement.execute();
     }
 
     @Override

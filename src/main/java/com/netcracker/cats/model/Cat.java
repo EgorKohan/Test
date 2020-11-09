@@ -16,7 +16,7 @@ public class Cat {
     private String name;
     private Cat father;
     private Cat mother;
-    private int age;
+    private Integer age;
     private String color;
     private Gender gender;
 
