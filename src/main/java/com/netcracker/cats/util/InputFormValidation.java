@@ -48,12 +48,11 @@ public class InputFormValidation {
         if(cat.getId() == null || cat.getFather() == null) {
             return "";
         }
-        Cat parent = catService.getById(cat.getId()); //ееех костыли
         Cat father = cat.getFather();
         if (father.equals(cat)) {
             return "You can't be a father!";
         }
-        for (Cat child : parent.getChildren()) {
+        for (Cat child : cat.getChildren()) {
             if(father.equals(child)){
                 return "Child can't be a father!";
             }
@@ -65,12 +64,11 @@ public class InputFormValidation {
         if(cat.getId() == null || cat.getMother() == null) {
             return "";
         }
-        Cat parent = catService.getById(cat.getId()); //ееех костыли
         Cat mother = cat.getMother();
         if (mother.equals(cat)) {
             return "You can't be a mother!";
         }
-        for (Cat child : parent.getChildren()) {
+        for (Cat child : mother.getChildren()) {
             if(mother.equals(child)){
                 return "Child can't be a mother!";
             }

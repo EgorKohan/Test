@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CatRequestUtil {
+public class MapCatByRequestUtil {
 
     private final CatService catService = new CatServiceImpl();
 
@@ -31,7 +31,6 @@ public class CatRequestUtil {
             gender = null;
         } else {
             gender = Gender.valueOf(genderStr.toUpperCase());
-            System.out.println(gender.toString().equals("MALE"));
         }
 
         Long fatherId = Long.valueOf(req.getParameter("father"));
@@ -50,7 +49,9 @@ public class CatRequestUtil {
     }
 
     public void addCatsAsListByGender(HttpServletRequest req) {
+
         final List<Cat> cats = catService.getAll();
+
         List<Cat> males = cats.stream()
                 .filter(cat -> cat.getGender().equals(Gender.MALE))
                 .collect(Collectors.toList());

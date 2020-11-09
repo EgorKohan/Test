@@ -69,18 +69,16 @@ public class CatDaoJdbcImpl implements CatDao {
         try (final PreparedStatement preparedStatement =
                      CONNECTION.prepareStatement(SQL_INSERT_CAT, Statement.RETURN_GENERATED_KEYS)) {
 
-            preparedStatement.setString(1, cat.getName());
-            preparedStatement.setString(2, cat.getGender().toString());
-            preparedStatement.setString(3, cat.getColor());
-            preparedStatement.setInt(4, cat.getAge());
-            preparedStatement.setLong(5, cat.getFather().getId());
-            preparedStatement.setLong(6, cat.getMother().getId());
+            mapBasicCatParameters(cat, preparedStatement);
 
             final int result = preparedStatement.executeUpdate();
 
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                Long id = generatedKeys.getLong(1);
-                return getById(id);
+                if (generatedKeys.next()) {
+                    Long id = generatedKeys.getLong(1);
+                    return getById(id);
+                }
+                return null;
             }
 
         }
@@ -90,18 +88,27 @@ public class CatDaoJdbcImpl implements CatDao {
     public Cat update(Cat cat) throws SQLException {
 
         try (final PreparedStatement preparedStatement = CONNECTION.prepareStatement(SQL_UPDATE_CAT_BY_ID)) {
-            preparedStatement.setString(1, cat.getName());
-            preparedStatement.setString(2, cat.getGender().toString());
-            preparedStatement.setString(3, cat.getColor());
-            preparedStatement.setInt(4, cat.getAge());
-            preparedStatement.setLong(5, cat.getFather().getId());
-            preparedStatement.setLong(6, cat.getMother().getId());
+            mapBasicCatParameters(cat, preparedStatement);
             preparedStatement.setLong(7, cat.getId());
 
             final int result = preparedStatement.executeUpdate();
 
             return getById(cat.getId());
         }
+    }
+
+    private void mapBasicCatParameters(Cat cat, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, cat.getName());
+        preparedStatement.setString(2, cat.getGender().toString());
+        preparedStatement.setString(3, cat.getColor());
+        preparedStatement.setInt(4, cat.getAge());
+
+        preparedStatement.setLong(5, (cat.getFather() != null) ?
+                cat.getFather().getId() :
+                0);
+        preparedStatement.setLong(6, (cat.getMother() != null) ?
+                cat.getFather().getId() :
+                0);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.netcracker.cats.service;
 import com.netcracker.cats.dao.CatDao;
 import com.netcracker.cats.dao.CatDaoJdbcImpl;
 import com.netcracker.cats.model.Cat;
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ public class CatServiceImpl implements CatService {
         try {
             final Cat cat = catDao.getById(id);
             if(cat == null){
-                LOGGER.error("Can't to map a cat correctly");
+                LOGGER.error("Can't map a cat correctly");
             }
             return cat;
         } catch (SQLException e) {

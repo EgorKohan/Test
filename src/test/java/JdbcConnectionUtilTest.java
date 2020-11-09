@@ -9,7 +9,7 @@ public class JdbcConnectionUtilTest {
 
     @BeforeClass
     public static void initialize() {
-        jdbcConnectionUtil = new JdbcConnectionUtil();
+        jdbcConnectionUtil = JdbcConnectionUtil.getInstance();
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.netcracker.cats.model;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Data
