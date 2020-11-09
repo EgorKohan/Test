@@ -7,6 +7,7 @@ import com.netcracker.cats.service.CatServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MapCatByRequestUtil {
@@ -51,16 +52,11 @@ public class MapCatByRequestUtil {
     public void addCatsAsListByGender(HttpServletRequest req) {
 
         final List<Cat> cats = catService.getAll();
+        final Map<Gender, List<Cat>> genderListMap =
+                cats.stream().collect(Collectors.groupingBy(Cat::getGender));
 
-        List<Cat> males = cats.stream()
-                .filter(cat -> cat.getGender().equals(Gender.MALE))
-                .collect(Collectors.toList());
-        List<Cat> females = cats.stream()
-                .filter(cat -> cat.getGender().equals(Gender.FEMALE))
-                .collect(Collectors.toList());
-// сделать одним стримом
-        req.setAttribute("males", males);
-        req.setAttribute("females", females);
+        req.setAttribute("males", genderListMap.get(Gender.MALE));
+        req.setAttribute("females", genderListMap.get(Gender.FEMALE));
     }
 
 }
