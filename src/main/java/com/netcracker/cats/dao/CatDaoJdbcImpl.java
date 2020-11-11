@@ -107,7 +107,7 @@ public class CatDaoJdbcImpl implements CatDao {
                 cat.getFather().getId() :
                 0);
         preparedStatement.setLong(6, (cat.getMother() != null) ?
-                cat.getFather().getId() :
+                cat.getMother().getId() :
                 0);
     }
 
@@ -150,9 +150,10 @@ public class CatDaoJdbcImpl implements CatDao {
         Long motherId = resultSet.getLong("mother_id");
         Cat father = getById(fatherId);
         Cat mother = getById(motherId);
+        if (father != null) father.getChildren().add(cat);
+        if (mother != null) mother.getChildren().add(cat);
         cat.setFather(father);
         cat.setMother(mother);
-
 
         final List<Cat> childrenFromResultSet = createChildrenFromResultSet(cat);
         cat.getChildren().addAll(childrenFromResultSet);
@@ -160,6 +161,7 @@ public class CatDaoJdbcImpl implements CatDao {
         return cat;
     }
 
+    // children dont add FIXME
     private List<Cat> createChildrenFromResultSet(Cat cat) throws SQLException {
         String query = (cat.getGender().equals(Gender.MALE)) ?
                 SQL_SELECT_FATHER_CHILD :

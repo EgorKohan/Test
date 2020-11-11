@@ -4,8 +4,6 @@ import com.netcracker.cats.model.Cat;
 import com.netcracker.cats.service.CatService;
 import com.netcracker.cats.service.CatServiceImpl;
 
-import javax.servlet.http.HttpServletRequest;
-
 public class InputFormValidation {
 
     private final CatService catService = new CatServiceImpl();
@@ -68,7 +66,7 @@ public class InputFormValidation {
         if (mother.equals(cat)) {
             return "You can't be a mother!";
         }
-        for (Cat child : mother.getChildren()) {
+        for (Cat child : cat.getChildren()) {
             if(mother.equals(child)){
                 return "Child can't be a mother!";
             }

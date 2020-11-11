@@ -20,7 +20,7 @@ public class MapCatByRequestUtil {
         String ageStr = req.getParameter("age");
 
         Integer age;
-        if (ageStr.equals("")) {
+        if (ageStr.equals("") || !ageStr.matches("\\d+")) {
             age = null;
         } else {
             age = Integer.parseInt(ageStr);

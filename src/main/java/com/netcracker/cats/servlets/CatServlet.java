@@ -62,6 +62,7 @@ public class CatServlet extends HttpServlet {
         Cat cat = mapCatByRequestUtil.createCatByRequest(req);
         Long id = Long.valueOf(req.getParameter("id"));
         cat.setId(id);
+        cat.getChildren().addAll(catService.getById(id).getChildren());
 
         String result = validation.checkCatForValid(cat);
 
