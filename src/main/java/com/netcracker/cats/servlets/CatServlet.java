@@ -68,7 +68,7 @@ public class CatServlet extends HttpServlet {
 
         if (result.isEmpty()) {
             Cat updatedCat = catService.update(cat);
-            LOGGER.info("Update a cat with id: {}", updatedCat.getId());
+            LOGGER.info("Update a cat with id: {}", cat.getId());
             resp.sendRedirect(req.getContextPath() + "/cats");
         } else {
             req.setAttribute("errorDescription", result);

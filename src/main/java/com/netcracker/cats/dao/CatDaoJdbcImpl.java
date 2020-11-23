@@ -161,7 +161,6 @@ public class CatDaoJdbcImpl implements CatDao {
         return cat;
     }
 
-    // children dont add FIXME
     private List<Cat> createChildrenFromResultSet(Cat cat) throws SQLException {
         String query = (cat.getGender().equals(Gender.MALE)) ?
                 SQL_SELECT_FATHER_CHILD :

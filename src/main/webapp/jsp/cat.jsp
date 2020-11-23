@@ -24,7 +24,7 @@
             Father:
             <c:if test="${cat.father != null}">
                 <span>
-                    <a href="<c:url value="/cats?id=${cat.father.id}"/>">
+                    <a hidden href="<c:url value="/cats?id=${cat.father.id}"/>">
                             ${cat.father.name}</a>
                     </span>
             </c:if>
@@ -37,7 +37,7 @@
             Mother:
             <c:if test="${cat.mother != null}">
                 <span>
-                    <a href="<c:url value="/cats?id=${cat.mother.id}"/>">
+                    <a hidden href="<c:url value="/cats?id=${cat.mother.id}"/>">
                             ${cat.mother.name}
                     </a>
                    </span>
